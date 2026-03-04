@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import connectDB from "./database/dbConfig.js";
 
 //dotenv config
 dotenv.config();
@@ -19,6 +20,9 @@ app.get("/", (req, res) => {
   res.send("Welcome to Lax 360 Backend");
 });
 
+//database connection
+connectDB();
+
 //port initialization
 const port = process.env.PORT || 5000;
 
@@ -26,4 +30,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
