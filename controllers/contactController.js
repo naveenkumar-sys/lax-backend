@@ -1,5 +1,6 @@
 import Contact from "../model/contactModel.js";
 import { sendContactEmail } from "../utils/sendContactEmail.js";
+import { saveContactToSheet } from "../utils/googleSheets.js";
 
 export const createContact = async (req, res) => {
   try {
@@ -22,7 +23,8 @@ export const createContact = async (req, res) => {
 
     // Save to MongoDB
     await newContact.save();
-
+    // Save to Google Sheets
+    await saveContactToSheet(newContact);
     // Send email notification
     await sendContactEmail({
       Name,

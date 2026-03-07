@@ -1,5 +1,6 @@
 import Career from "../model/careerModel.js";
 import { sendCareerEmail } from "../utils/sendCareerEmail.js";
+import { saveCareerToSheet } from "../utils/googleSheets.js";
 
 export const applyJob = async (req, res) => {
   try {
@@ -26,7 +27,7 @@ export const applyJob = async (req, res) => {
     }
 
     // Correct Cloudinary URL
-   const resumeUrl = req.file.path;
+    const resumeUrl = req.file.path;
     // console.log(req.file.path);
 
     // console.log("Resume URL:", resumeUrl);
@@ -46,7 +47,10 @@ export const applyJob = async (req, res) => {
 
     await application.save();
 
+    // Send email
     await sendCareerEmail(application);
+    // Save to Google Sheets
+    await saveCareerToSheet(application);
 
     res.status(201).json({
       success: true,
