@@ -50,7 +50,7 @@ export const applyJob = async (req, res) => {
     // Send email
     await sendCareerEmail(application);
     // Save to Google Sheets
-    await saveCareerToSheet(application);
+    await saveCareerToSheet(application);  
 
     res.status(201).json({
       success: true,
