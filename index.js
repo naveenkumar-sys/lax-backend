@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import dns from "node:dns";
 import connectDB from "./database/dbConfig.js";
 import contactRoutes from "./Routes/contactRoutes.js";
 import careerRoutes from "./Routes/careerRoutes.js";
 import jobRoutes from "./Routes/jobRoutes.js";
+
+// Force IPv4 for DNS resolution to avoid ENETUNREACH errors on ipv6-incompatible environments
+dns.setDefaultResultOrder("ipv4first");
 
 //dotenv config
 dotenv.config();
