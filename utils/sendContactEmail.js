@@ -4,14 +4,14 @@ import dns from "node:dns";
 export const sendContactEmail = async (data) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // Use SSL/TLS
+    port: 587,
+    secure: false, // Use STARTTLS
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
     tls: {
-      rejectUnauthorized: false, // Helps in some environments
+      rejectUnauthorized: false,
     },
     // Strictly force IPv4 using a custom lookup function
     lookup: (hostname, options, callback) => {
