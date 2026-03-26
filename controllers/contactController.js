@@ -21,27 +21,31 @@ export const createContact = async (req, res) => {
       message,
     });
 
+    console.log("Saving Contact to MongoDB...");
     // Save to MongoDB
     await newContact.save();
-    // Save to Google Sheets
-    await saveContactToSheet(newContact);
-    // Send email notification
-    await sendContactEmail({
-      Name,
-      email,
-      phone,
-      service,
-      message,
-    });
+    console.log("Contact saved to MongoDB.");
 
+    // Return response quickly
     res.status(201).json({
       success: true,
       message: "Contact submitted successfully",
       data: newContact,
     });
-  } catch (error) {
-    console.log(error);
 
+    // Run third-party tasks in background
+    console.log("Initiating Google Sheets and Email...");
+    
+    saveContactToSheet(newContact)
+      .then(() => console.log("Success: Saved to Google Sheets"))
+      .catch(err => console.error("Error: Failed to save to Google Sheets:", err.message));
+
+    sendContactEmail({ Name, email, phone, service, message })
+      .then(() => console.log("Success: Sent Email Notification"))
+      .catch(err => console.error("Error: Failed to send email:", err.message));
+
+  } catch (error) {
+    console.error("Create Contact Error:", error);
     res.status(500).json({
       success: false,
       message: "Server Error",

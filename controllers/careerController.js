@@ -45,18 +45,28 @@ export const applyJob = async (req, res) => {
       resume: resumeUrl,
     });
 
+    console.log("Saving application to MongoDB...");
     await application.save();
+    console.log("Application saved to MongoDB.");
 
-    // Send email
-    await sendCareerEmail(application);
-    // Save to Google Sheets
-    await saveCareerToSheet(application);  
-
+    // Return response promptly
     res.status(201).json({
       success: true,
       message: "Application submitted successfully",
       resumeUrl,
     });
+
+    // Handle third-party calls in the background
+    console.log("Initiating background tasks: Email and Google Sheets...");
+    
+    sendCareerEmail(application)
+      .then(() => console.log("Success: Sent Career Email Notification"))
+      .catch(err => console.error("Error: Failed to send career email:", err.message));
+
+    saveCareerToSheet(application)
+      .then(() => console.log("Success: Saved to Career Google Sheets"))
+      .catch(err => console.error("Error: Failed to save to career sheet:", err.message));
+
   } catch (error) {
     console.error("Apply Job Error:", error);
 
