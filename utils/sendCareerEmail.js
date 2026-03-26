@@ -1,10 +1,15 @@
 import nodemailer from "nodemailer";
-import dns from "node:dns";
+import dns from "node:dns/promises";
 
 export const sendCareerEmail = async (data) => {
   try {
+    // Manually resolve to IPv4 address to bypass system DNS and force IPv4
+    const addresses = await dns.resolve4("smtp.gmail.com");
+    const host = addresses[0];
+    console.log("Resolved smtp.gmail.com to IPv4:", host);
+
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: host,
       port: 587,
       secure: false, // Use STARTTLS
       auth: {
@@ -13,10 +18,7 @@ export const sendCareerEmail = async (data) => {
       },
       tls: {
         rejectUnauthorized: false,
-      },
-      // Strictly force IPv4 using a custom lookup function
-      lookup: (hostname, options, callback) => {
-        return dns.lookup(hostname, { family: 4 }, callback);
+        servername: "smtp.gmail.com", // Essential when using an IP address for the host
       },
     });
 
