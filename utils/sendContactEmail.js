@@ -12,6 +12,7 @@ export const sendContactEmail = async (data) => {
     tls: {
       rejectUnauthorized: false, // Helps in some environments
     },
+    family: 4, // Force IPv4
   });
 
   const mailOptions = {

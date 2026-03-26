@@ -13,6 +13,7 @@ export const sendCareerEmail = async (data) => {
       tls: {
         rejectUnauthorized: false,
       },
+      family: 4, // Force IPv4
     });
 
     const mailOptions = {
