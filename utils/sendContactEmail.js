@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import dns from "node:dns";
 
 export const sendContactEmail = async (data) => {
   const transporter = nodemailer.createTransport({
@@ -12,7 +13,10 @@ export const sendContactEmail = async (data) => {
     tls: {
       rejectUnauthorized: false, // Helps in some environments
     },
-    family: 4, // Force IPv4
+    // Strictly force IPv4 using a custom lookup function
+    lookup: (hostname, options, callback) => {
+      return dns.lookup(hostname, { family: 4 }, callback);
+    },
   });
 
   const mailOptions = {
